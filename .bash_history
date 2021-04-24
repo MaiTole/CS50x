@@ -1,26 +1,3 @@
-export API_KEY=pk_1ebec9c5143143b9899e7513094b5736
-flask run
-cd ~/pset8/finance
-export API_KEY=pk_1ebec9c5143143b9899e7513094b5736
-flask run
-cd ~/pset8/finance
-export API_KEY=pk_1ebec9c5143143b9899e7513094b5736
-flask run
-cd ~/pset8/finance
-export API_KEY=pk_1ebec9c5143143b9899e7513094b5736
-flask run
-cd ~/pset8/finance
-export API_KEY=pk_1ebec9c5143143b9899e7513094b5736
-flask run
-cd ~/pset8/finance
-export API_KEY=pk_1ebec9c5143143b9899e7513094b5736
-flask run
-cd ~/pset8/finance
-export API_KEY=pk_1ebec9c5143143b9899e7513094b5736
-flask run
-cd ~/pset8/finance
-export API_KEY=pk_1ebec9c5143143b9899e7513094b5736
-flask run
 cd ~/pset8/finance
 export API_KEY=pk_1ebec9c5143143b9899e7513094b5736
 flask run
@@ -518,3 +495,12 @@ ssh config --local -e
 git config --local -e
 git init
 git add pset1
+git add .
+git commit -m "commit pset1"
+git push -u origin main
+ls
+git config --local -e
+git init
+git add pset1
+git add *
+git commit -m "commit pset1"
