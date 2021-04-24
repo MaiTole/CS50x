@@ -1,3 +1,5 @@
 [user]
 	email = maithili.tole@gmail.com
 	name = MaiTole
+[url "https://"]
+	insteadOf = git://
