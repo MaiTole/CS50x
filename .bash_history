@@ -1,51 +1,5 @@
 export API_KEY=pk_1ebec9c5143143b9899e7513094b5736
 flask run
-ls
-cd ~/pset8/finance
-export API_KEY=pk_1ebec9c5143143b9899e7513094b5736
-flask run
-cd ~/pset8/finance
-flask run
-cd ~/pset8/finance
-export API_KEY=pk_1ebec9c5143143b9899e7513094b5736
-flask run
-cd ~/pset8/finance
-export API_KEY=pk_1ebec9c5143143b9899e7513094b5736
-flask run
-cd ~/pset8/finance
-export API_KEY=pk_1ebec9c5143143b9899e7513094b5736
-flask run
-cd ~/pset8/finance
-export API_KEY=pk_1ebec9c5143143b9899e7513094b5736
-flask run
-cd ~/pset8/finance
-export API_KEY=pk_1ebec9c5143143b9899e7513094b5736
-flask run
-cd ~/pset8/finance
-export API_KEY=pk_1ebec9c5143143b9899e7513094b5736
-flask run
-cd ~/pset8/finance
-export API_KEY=pk_1ebec9c5143143b9899e7513094b5736
-flask run
-cd ~/pset8/finance
-export API_KEY=pk_1ebec9c5143143b9899e7513094b5736
-cd ~/pset8/finance
-export API_KEY=pk_1ebec9c5143143b9899e7513094b5736
-flask run
-cd ~/pset8/finance
-export API_KEY=pk_1ebec9c5143143b9899e7513094b5736
-cd ~/pset8/finance
-export API_KEY=pk_1ebec9c5143143b9899e7513094b5736
-flask run
-cd ~/pset8/finance
-export API_KEY=pk_1ebec9c5143143b9899e7513094b5736
-flask run
-cd ~/pset8/finance
-export API_KEY=pk_1ebec9c5143143b9899e7513094b5736
-flask run
-cd ~/pset8/finance
-export API_KEY=pk_1ebec9c5143143b9899e7513094b5736
-flask run
 cd ~/pset8/finance
 export API_KEY=pk_1ebec9c5143143b9899e7513094b5736
 flask run
@@ -507,3 +461,43 @@ git add pset1/
 git add *
 git commit -m "commit pset1"
 git add >
+git add .
+git push -u origin main
+git init
+git remote add origin git@github.com:MaiTole/CS50x.git
+git remote rm origin
+git init
+git remote rm origin
+git remote add origin git@github.com:MaiTole/CS50x.git
+git add pset1/
+git add *
+git commit -m "commit pset1"
+git push -u origin main
+git remote set-url origin https://github.com/MaiTole/CS50x.git
+git init
+git add pset1/
+git add *
+git commit -m "commit pset1"
+git push -u origin main
+git remote set-url origin https://github.com/MaiTole/CS50x.git
+git push --set-upstream origin master
+git push --set-upstream origin main
+ls
+cd ~pset1
+cd pset1
+ls
+git remote set-url origin https://github.com/MaiTole/CS50x.git
+git init
+git remote set-url origin https://github.com/MaiTole/CS50x.git
+git add pset1/
+git add pset1
+ls
+git init
+git remote set-url origin https://github.com/MaiTole/CS50x.git
+git add pset1
+git commit -a "commit pset1"
+git commit -m "commit pset1"
+git push -u origin main
+git init
+git remote set-url origin https://github.com/MaiTole/CS50x.git
+git add pset1
