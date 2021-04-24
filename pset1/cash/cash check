@@ -1,0 +1,37 @@
+:) cash.c exists
+:) cash.c compiles
+
+:( input of 0.41 yields output of 4
+    expected "4\n", not "2\n"
+
+:) input of 0.01 yields output of 1
+
+:( input of 0.15 yields output of 2
+    expected "2\n", not "0\n"
+
+:) input of 1.6 yields output of 7
+:) input of 23 yields output of 92
+
+:( input of 4.2 yields output of 18
+    expected "18\n", not "17\n"
+
+:) rejects a negative input like -1
+:) rejects a non-numeric input of "foo"
+:) rejects a non-numeric input of ""
+To see the results in your browser go to https://submit.cs50.io/check50/d884a9be54dbdb8cecdf1e31071bd5bc382d4d57
+
+:) cash.c exists
+:) cash.c compiles
+:( input of 0.41 yields output of 4
+    expected "4\n", not "0.160000\n1\n0..."
+:( input of 0.01 yields output of 1
+    expected "1\n", not "0.010000\n0\n0..."
+:) input of 0.15 yields output of 2
+:) input of 1.6 yields output of 7
+:) input of 23 yields output of 92
+:( input of 4.2 yields output of 18
+    expected "18\n", not "0.200000\n16\n..."
+    did you forget to round your input to the nearest cent?
+:) rejects a negative input like -1
+:) rejects a non-numeric input of "foo" 
+:) rejects a non-numeric input of "" 
