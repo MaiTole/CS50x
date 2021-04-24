@@ -1,15 +1,3 @@
-cd ~/pset8/homepage
-http-server
-cd ~/pset8/homepage
-cd ~/pset8/finance
-flask run
-export API_KEY=pk_1ebec9c5143143b9899e7513094b5736
-flask run
-export API_KEY=pk_1ebec9c5143143b9899e7513094b5736
-flask run
-ls
-cd ~/pset8/finance
-ls
 export API_KEY=pk_1ebec9c5143143b9899e7513094b5736
 flask run
 ls
@@ -502,3 +490,20 @@ ls
 git init
 git remote set-url origin https://github.com/MaiTole/CS50x.git
 git add pset1
+git add .
+git commit -m "Commit pset1"
+git push -u origin main
+git add pset1/
+git commit -m "Commit pset1"
+git add *
+git commit -m "Commit pset1"
+git push -u origin main
+git init
+git remote add origin git@github.com:MaiTole/CS50x.git
+git rm remote origin
+git remote rm origin
+git remote add origin git@github.com:MaiTole/CS50x.git
+git add pset1/
+git add *
+git commit -m "commit pset1"
+git add >
