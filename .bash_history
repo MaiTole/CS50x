@@ -1,17 +1,3 @@
-flask run
-pip uninstall werkzeug
-cd ~/pset8
-wget http://cdn.cs50.net/2020/fall/psets/9/finance/finance.zip
-unzip finance.zip
-rm finance.zip
-cd finance
-ls
-export API_KEY=pk_1ebec9c5143143b9899e7513094b5736
-flask run
-cd ~/pset8/finance
-flask run
-export API_KEY=pk_1ebec9c5143143b9899e7513094b5736
-flask run
 cd ~/pset8/homepage
 http-server
 cd ~/pset8/homepage
@@ -503,3 +489,16 @@ git init
 git remote add origin https://github.com/MaiTole/CS50x.git
 git add pset1
 git commit -m "commit pset1"
+git add .
+git push -u origin main
+git init
+git remote add origin git@github.com:MaiTole/CS50x.git
+git remote rm origin
+git remote add origin git@github.com:MaiTole/CS50x.git
+git add pset1
+git commit -m "commit pset1"
+git push -u origin main
+ls
+git init
+git remote set-url origin https://github.com/MaiTole/CS50x.git
+git add pset1
