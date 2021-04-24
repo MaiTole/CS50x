@@ -504,3 +504,10 @@ git init
 git add pset1
 git add *
 git commit -m "commit pset1"
+git add .
+git commit -m "commit pset1"
+git push -u origin main
+git config http.postBuffer 524288000
+git init
+git remote set-url origin https://github.com/MaiTole/CS50x.git
+git add pset1
