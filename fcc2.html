@@ -1,0 +1,72 @@
+<script src="https://cdn.freecodecamp.org/testable-projects-fcc/v1/bundle.js"></script>
+        <link href="style.css" rel="stylesheet">
+
+<!-- #FFF043 -->
+
+<!--
+
+Hello Camper!
+
+For now, the test suite only works in Chrome! Please read the README below in the JS Editor before beginning. Feel free to delete this message once you have read it. Good luck and Happy Coding!
+
+- The freeCodeCamp Team
+
+-->
+
+<div class="container">
+  <div class="newbox">
+  <h1 id="title" class="header"> Craftly Sign-Up Form </h1>
+  <br margin=top="10px">
+  <p id="description" class="sub-header"><strong>WELCOME! </strong> Here at Craftly we offer a diverse range of courses and materials on a variety of crafts. Run through our sign-up form to submit your profile and we will help you find the perfect stress-busting deal. Get started right away!</p>
+
+<form id="survey-form">
+
+  <label for="fullname" id="name-label" class="mlabel">Full Name
+  <input type="text" id="name" name="fullname" placeholder="Jane Craftsman" required></label>
+  <br margin-bottom="3px"><br>
+
+  <div>
+    <label for="gender" id="gender-label" class="mlabel">Gender</label><br><br>
+    <table>
+      <tr>
+        <tr><input type="radio" name="gender" class="tlabel" value="female"><label for="female" class="tlabel">Female</label></input></tr>
+        <tr><input type="radio" name="gender" class="tlabel" value="male"><label for="male" class="tlabel">Male</label></input></tr>
+        <tr><input type="radio" name="gender" class="tlabel" value="undeclared"><label for="undeclared" class="tlabel">Undeclared</label></input></tr>
+      </tr>
+    </table>
+  </div>
+
+  <label for="email" id="email-label" class="mlabel">Email
+  <input type="email" id="email" name="email" placeholder="craftyjane@email.com" required></label><br>
+  <br margin-bottom="3px"><br>
+
+  <label for="contactnumber" id="number-label" class="mlabel">Contact Number
+  <input type="number" id="number" name="contactnumber" placeholder="12345678" required min="0" max="999999999999999"></label><br>
+
+ <p class="checkbox">Which of the following crafts are you interested in? (you may pick more than one)</p><br margin-bottom="3px"><br>
+ <div>
+    <table>
+    <tr>
+    <td><input type="checkbox" id="Knitting" name="Knitting" value="Craft1"><label class="slabel" for="Knitting"> Knitting</label></input></td>
+    <td><input type="checkbox" id="Crocheting" name="Crocheting" value="Craft2"><label for="Crocheting" class="slabel"> Crocheting</label></input></td>
+    <td><input type="checkbox" id="Sewing" name="Sewing" value="Craft3"><label for="Sewing" class="slabel"> Sewing</label></input></td>
+    </tr>
+    <tr>
+    <td><input type="checkbox" id="Embroidery" name="Embroidery" value="Craft4"><label for="Embroidery" class="slabel"> Embroidery</label></input></td>
+    <td><input type="checkbox" id="Floristry" name="Floristry" value="Craft5"><label for="Floristry" class="slabel"> Floristry</label></input></td>
+    <td><input type="checkbox" id="Jewellery Making" name="Jewellery Making" value="Craft6"><label for="Jewellery Making" class="slabel"> Jewellery Making</label></input></td>
+    </tr>
+    </table>
+      <br margin-bottom="2px"><br>
+ </div>
+
+ <div>
+   <textarea style="width:600px; height:80px" placeholder="Any additional information you would like us to know"></textarea>
+   <br margin-bottom="3px"><br>
+ </div>
+  <input id="submit" type="submit" style="width:40%"></input>
+
+</form>
+
+</div>
+</div>

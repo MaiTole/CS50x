@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+        <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet">
+        <link href="styles.css" rel="stylesheet">
+        <title>Make a Reservation</title>
+    </head>
+    <body>
+        <h3 class="tabs">
+            <tb>
+                <tr>
+                <td>
+                    <a href=index.html class="tabs">Home</a>
+                </td>
+                <td>
+                    <a href=About-Us.html class="tabs">About Us</a>
+                </td>
+                <td>
+                    <a href=Menu.html class="tabs">Menu</a>
+                </td>
+                <td>
+                    <a href=Go-to-Italy.html class="tabs">Getting Here</a>
+                </td>
+                </tr>
+            </tb>
+        </h3>
+        <h1 class="titles">
+            Book A Table
+        </h1>
+        <form>
+            <label for="name">Name: </label><br>
+            <input type="text" id="name" name="name"><br />
+
+            <label for="email">Email: </label><br>
+            <input type="email" id="email" name="email"><br />
+
+            <label for="telephone">Mobile No: </label><br>
+            <input type="numeric" id="telephone" name="telephone"><br />
+
+            <label for="pax">Table For Pax: </label><br>
+            <input type="number" id="pax" name="pax"><br />
+            <br />
+            <label for="time">Timing: </label>
+            <select name="time-hour" id="time-hour">
+            <datalist id="time-hour">
+                <option value="11">11</option>
+                <option value="12">12</option>
+                <option value="13">13</option>
+                <option value="14">14</option>
+                <option value="17">17</option>
+                <option value="18">18</option>
+                <option value="19">19</option>
+                <option value="20">20</option>
+                <option value="21">21</option>
+            </datalist>
+            </select>
+            <select name="time-min" id="time-min">
+            <datalist id="time-minute">
+                <option value="00">00</option>
+                <option value="05">05</option>
+                <option value="10">10</option>
+                <option value="15">15</option>
+                <option value="20">20</option>
+                <option value="25">25</option>
+                <option value="30">30</option>
+                <option value="35">35</option>
+                <option value="40">40</option>
+                <option value="45">45</option>
+                <option value="50">50</option>
+                <option value="55">55</option>
+            </datalist>
+            </select>
+            <br />
+            <br />
+            <input type="submit" value="Book">
+        <form>
+    </body>
+</html>

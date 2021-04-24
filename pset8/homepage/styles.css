@@ -1,0 +1,63 @@
+.body
+{
+    background-image: url("Little Italy.jpg");
+    background-repeat: no-repeat;
+    background-size: 600px auto;
+    background-position: 80% 50%;
+}
+.titles
+{
+    text-align: left;
+    margin-top: 200px;
+    margin-left: 100px;
+    color: green;
+    font-family: Palatino;
+    font-size: 70px;
+}
+#caption
+{
+    text-align: left;
+    padding-left: 100px;
+    color: green;
+    font-family: Palatino;
+    font-style: italic;
+    font-size: 26px;
+}
+.sub-heading
+{
+    text-align: center;
+    margin-top: 190px;
+    color: red;
+    font-size: 40px;
+    font-family: Apple Chancery;
+    font-style: italic;
+}
+.tabs
+{
+    text-align: right;
+    margin-top: 20px;
+    margin-right: 30px;
+    color: green;
+    font-size: 20px;
+}
+#about
+{
+    text-align: center;
+    margin: 80px 50px 50px;
+    font-size: 25px;
+    color: red;
+    font-family: Palatino;
+    font-style: normal;
+}
+form
+{
+    text-align: center;
+    margin: 80px 50px 50px;
+    font-size: 30px;
+    color: red;
+    font-family: Palatino;
+}
+iframe
+{
+    margin-left: 550px;
+}

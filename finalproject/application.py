@@ -1,5 +1,6 @@
 import os
 
+
 from cs50 import SQL
 from flask import Flask, flash, redirect, render_template, request, session
 from flask_session import Session
@@ -8,10 +9,23 @@ from werkzeug.exceptions import default_exceptions, HTTPException, InternalServe
 from werkzeug.security import check_password_hash, generate_password_hash
 import requests
 from helpers import apology, login_required
+from flask_mail import Mail, Message
 
 app = Flask(__name__)
 
 app.config["TEMPLATES_AUTO_RELOAD"] = True
+
+#Mail setup
+MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
+MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
+
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 465
+app.config['MAIL_USERNAME'] = MAIL_USERNAME
+app.config['MAIL_PASSWORD'] = MAIL_PASSWORD
+app.config['MAIL_USE_TLS'] = False
+app.config['MAIL_USE_SSL'] = True
+mail = Mail(app)
 
 # Ensure responses aren't cached
 @app.after_request
@@ -20,10 +34,6 @@ def after_request(response):
     response.headers["Expires"] = 0
     response.headers["Pragma"] = "no-cache"
     return response
-
-
-# Custom filter
-#app.jinja_env.filters["usd"] = usd
 
 # Configure session to use filesystem (instead of signed cookies)
 app.config["SESSION_FILE_DIR"] = mkdtemp()
@@ -35,14 +45,8 @@ Session(app)
 db = SQL("sqlite:///finalproj.db")
 
 # Make sure API key is set
-#if not os.environ.get("API_KEY"):
-#    raise RuntimeError("API_KEY not set")
-
-#@app.route("/", methods=["POST", "GET"])
-#@login_required
-#def index():
-#    "TODO"
-#    return render_template("index.html")
+if not os.environ.get("API_KEY"):
+    raise RuntimeError("API_KEY not set")
 
 @app.route("/login", methods=["POST", "GET"])
 def login():
@@ -100,7 +104,7 @@ def register():
         if len(rowcheck) != 0:
             return apology("This username is taken, please enter a different username.", 403)
         else:
-            db.execute("INSERT INTO users (username, hash) VALUES(:username, :hash)", username=request.form.get("username"), hash=generate_password_hash(request.form.get("password")))
+            db.execute("INSERT INTO users (username, hash, email) VALUES(:username, :hash, :email)", username=request.form.get("username"), hash=generate_password_hash(request.form.get("password")), email=request.form.get("email"))
             return apology("success!")
 
     return render_template("register.html")
@@ -121,7 +125,17 @@ def addtopantry():
             return apology("Sorry, this item is already in your pantry. Use the update pantry option instead!")
         else:
             db.execute("INSERT INTO pantry (id, type, item, unit, quantity) VALUES(:userid, :type, :item, :unit, :quantity)", userid=session["user_id"], type=typeadd, item=itemadd, unit=unitadd, quantity=quantityadd)
-        return render_template("index.html")
+        beverages = db.execute("SELECT * FROM pantry WHERE id=:id AND type=:type", id=session['user_id'], type="beverages")
+        dairy = db.execute("SELECT * FROM pantry WHERE id=:id AND type=:type", id=session['user_id'], type="dairy")
+        deli = db.execute("SELECT * FROM pantry WHERE id=:id AND type=:type", id=session['user_id'], type="deli")
+        fruits = db.execute("SELECT * FROM pantry WHERE id=:id AND type=:type", id=session['user_id'], type="fruits")
+        vegetables = db.execute("SELECT * FROM pantry WHERE id=:id AND type=:type", id=session['user_id'], type="vegetables")
+        meat = db.execute("SELECT * FROM pantry WHERE id=:id AND type=:type", id=session['user_id'], type="meat")
+        drygoods = db.execute("SELECT * FROM pantry WHERE id=:id AND type=:type", id=session['user_id'], type="dry-goods")
+        spices = db.execute("SELECT * FROM pantry WHERE id=:id AND type=:type", id=session['user_id'], type="spices")
+        packagedfood = db.execute("SELECT * FROM pantry WHERE id=:id AND type=:type", id=session['user_id'], type="packaged-food")
+        return render_template("index.html", beverages=beverages, dairy=dairy, deli=deli, fruits=fruits, vegetables=vegetables, meat=meat, drygoods=drygoods, spices=spices, packagedfood = packagedfood) #, bevmin=bevmin, dairymin=dairymin)
+
     return render_template("addtopantry.html")
 
 @app.route("/updatepantry", methods=["POST", "GET"])
@@ -143,9 +157,9 @@ def updatepantry():
         fruits = db.execute("SELECT * FROM pantry WHERE id=:id AND type=:type", id=session['user_id'], type="fruits")
         vegetables = db.execute("SELECT * FROM pantry WHERE id=:id AND type=:type", id=session['user_id'], type="vegetables")
         meat = db.execute("SELECT * FROM pantry WHERE id=:id AND type=:type", id=session['user_id'], type="meat")
-        drygoods = db.execute("SELECT * FROM pantry WHERE id=:id AND type=:type", id=session['user_id'], type="dry goods")
+        drygoods = db.execute("SELECT * FROM pantry WHERE id=:id AND type=:type", id=session['user_id'], type="dry-goods")
         spices = db.execute("SELECT * FROM pantry WHERE id=:id AND type=:type", id=session['user_id'], type="spices")
-        packagedfood = db.execute("SELECT * FROM pantry WHERE id=:id AND type=:type", id=session['user_id'], type="packaged food")
+        packagedfood = db.execute("SELECT * FROM pantry WHERE id=:id AND type=:type", id=session['user_id'], type="packaged-food")
         return render_template("index.html", beverages=beverages, dairy=dairy, deli=deli, fruits=fruits, vegetables=vegetables, meat=meat, drygoods=drygoods, spices=spices, packagedfood = packagedfood)
         #return render_template("editpantry.html", type=typeadd, myitem=myitem) # quantity=selection[0]['quantity'], units=selection[0]['unit'])
     else:
@@ -163,8 +177,8 @@ def updatepantry():
         fruititems = db.execute("SELECT * FROM pantry WHERE id=:id AND type=:type", id=userid, type="fruits")
         meatitems = db.execute("SELECT * FROM pantry WHERE id=:id AND type=:type", id=userid, type="meat")
         spiceitems = db.execute("SELECT * FROM pantry WHERE id=:id AND type=:type", id=userid, type="spices")
-        drygoodsitems = db.execute("SELECT * FROM pantry WHERE id=:id AND type=:type", id=userid, type="dry goods")
-        packagedfooditems = db.execute("SELECT * FROM pantry WHERE id=:id AND type=:type", id=userid, type="packaged food")
+        drygoodsitems = db.execute("SELECT * FROM pantry WHERE id=:id AND type=:type", id=userid, type="dry-goods")
+        packagedfooditems = db.execute("SELECT * FROM pantry WHERE id=:id AND type=:type", id=userid, type="packaged-food")
         ## ADD DATA FOR ALL TYPES E.G. FRUITS, VEGGIES, MEATS ETC.
 
         #itemrows = db.execute("SELECT * FROM pantry WHERE id=:id AND type=:type", id=userid, type=request.form.get('type'))
@@ -180,7 +194,18 @@ def editpantry():
         quantityadd = request.form.get("amount")
         #Check if there is already existing item
         db.execute(f"UPDATE pantry SET quantity = {quantityadd} WHERE id =:id AND item=:item", id = session['user_id'], item = itemadd)
-        return render_template("index.html")
+
+        beverages = db.execute("SELECT * FROM pantry WHERE id=:id AND type=:type", id=session['user_id'], type="beverages")
+        dairy = db.execute("SELECT * FROM pantry WHERE id=:id AND type=:type", id=session['user_id'], type="dairy")
+        deli = db.execute("SELECT * FROM pantry WHERE id=:id AND type=:type", id=session['user_id'], type="deli")
+        fruits = db.execute("SELECT * FROM pantry WHERE id=:id AND type=:type", id=session['user_id'], type="fruits")
+        vegetables = db.execute("SELECT * FROM pantry WHERE id=:id AND type=:type", id=session['user_id'], type="vegetables")
+        meat = db.execute("SELECT * FROM pantry WHERE id=:id AND type=:type", id=session['user_id'], type="meat")
+        drygoods = db.execute("SELECT * FROM pantry WHERE id=:id AND type=:type", id=session['user_id'], type="dry-goods")
+        spices = db.execute("SELECT * FROM pantry WHERE id=:id AND type=:type", id=session['user_id'], type="spices")
+        packagedfood = db.execute("SELECT * FROM pantry WHERE id=:id AND type=:type", id=session['user_id'], type="packaged-food")
+        return render_template("index.html", beverages=beverages, dairy=dairy, deli=deli, fruits=fruits, vegetables=vegetables, meat=meat, drygoods=drygoods, spices=spices, packagedfood = packagedfood) #, bevmin=bevmin, dairymin=dairymin)
+
     return render_template("editpantry.html")
     #else:
      #   selection = db.execute("SELECT * FROM pantry WHERE id=:id AND type=:type AND item=:item", id=userid, type=typeadd, item=itemadd)
@@ -189,14 +214,6 @@ def editpantry():
 @login_required
 def index():
     beverages = db.execute("SELECT * FROM pantry WHERE id=:id AND type=:type", id=session['user_id'], type="beverages")
-    #bevmin = []
-    #for b in beverages:
-        #rows = db.execute("SELECT * FROM pantry WHERE id=:id AND type=:type AND item=:item", id=session['user_id'], type="beverages", item=beverages)
-        #for r in rows:
-        #    if r['quantity'] != NULL:
-        #        bevmin.append(r['quantity'])
-        #    else:
-        #        bevmin.append("0")
     dairy = db.execute("SELECT * FROM pantry WHERE id=:id AND type=:type", id=session['user_id'], type="dairy")
     dairymin = []
     for i in dairy:
@@ -210,16 +227,16 @@ def index():
     fruits = db.execute("SELECT * FROM pantry WHERE id=:id AND type=:type", id=session['user_id'], type="fruits")
     vegetables = db.execute("SELECT * FROM pantry WHERE id=:id AND type=:type", id=session['user_id'], type="vegetables")
     meat = db.execute("SELECT * FROM pantry WHERE id=:id AND type=:type", id=session['user_id'], type="meat")
-    drygoods = db.execute("SELECT * FROM pantry WHERE id=:id AND type=:type", id=session['user_id'], type="dry goods")
+    drygoods = db.execute("SELECT * FROM pantry WHERE id=:id AND type=:type", id=session['user_id'], type="dry-goods")
     spices = db.execute("SELECT * FROM pantry WHERE id=:id AND type=:type", id=session['user_id'], type="spices")
-    packagedfood = db.execute("SELECT * FROM pantry WHERE id=:id AND type=:type", id=session['user_id'], type="packaged food")
+    packagedfood = db.execute("SELECT * FROM pantry WHERE id=:id AND type=:type", id=session['user_id'], type="packaged-food")
     return render_template("index.html", beverages=beverages, dairy=dairy, deli=deli, fruits=fruits, vegetables=vegetables, meat=meat, drygoods=drygoods, spices=spices, packagedfood = packagedfood) #, bevmin=bevmin, dairymin=dairymin)
 
 @app.route("/pantryreqmt", methods=["POST", "GET"])
 @login_required
 def pantryreqmt():
     if request.method == "POST":
-
+        userid = session['user_id']
         typemin = request.form.get('typemin')
         quantitymin = request.form.get('quantitymin')
         itemmin = request.form.get('itemmin')
@@ -230,13 +247,52 @@ def pantryreqmt():
             return apology("Please enter only one letter/word for units")
         elif quantitymin == None:
             return apology("Please enter a valid quantity")
-        elif itemin == None:
+        elif itemmin == None:
             return apology("Please enter a valid item")
         else:
-            db.execute("INSERT INTO pantrymin (id, type, item, quantity, units) VALUES(:id, :type, :item, :quantity, :units)", id=session["user_id"], type =typemin, item=itemmin, quantity=quantitymin, units=unitmin)
-            return render_template("index.html")
+            #Check if there is already existing item
+            rows = db.execute("SELECT * FROM pantrymin WHERE id=:id AND item=:item", id=userid, item=itemmin)
+            if len(rows) != 0:
+                return apology("Sorry, this item is already in your pantry. Use the update pantry option instead!")
+            else:
+                db.execute("INSERT INTO pantrymin (id, type, item, quantity, units) VALUES(:id, :type, :item, :quantity, :units)", id=session["user_id"], type =typemin, item=itemmin, quantity=quantitymin, units=unitmin)
+
+                beverages = db.execute("SELECT * FROM pantry WHERE id=:id AND type=:type", id=session['user_id'], type="beverages")
+                dairy = db.execute("SELECT * FROM pantry WHERE id=:id AND type=:type", id=session['user_id'], type="dairy")
+                deli = db.execute("SELECT * FROM pantry WHERE id=:id AND type=:type", id=session['user_id'], type="deli")
+                fruits = db.execute("SELECT * FROM pantry WHERE id=:id AND type=:type", id=session['user_id'], type="fruits")
+                vegetables = db.execute("SELECT * FROM pantry WHERE id=:id AND type=:type", id=session['user_id'], type="vegetables")
+                meat = db.execute("SELECT * FROM pantry WHERE id=:id AND type=:type", id=session['user_id'], type="meat")
+                drygoods = db.execute("SELECT * FROM pantry WHERE id=:id AND type=:type", id=session['user_id'], type="dry-goods")
+                spices = db.execute("SELECT * FROM pantry WHERE id=:id AND type=:type", id=session['user_id'], type="spices")
+                packagedfood = db.execute("SELECT * FROM pantry WHERE id=:id AND type=:type", id=session['user_id'], type="packaged-food")
+                return render_template("index.html", beverages=beverages, dairy=dairy, deli=deli, fruits=fruits, vegetables=vegetables, meat=meat, drygoods=drygoods, spices=spices, packagedfood = packagedfood) #, bevmin=bevmin, dairymin=dairymin)
+
     elif request.method == "GET":
         return render_template("pantryreqmt.html")
+
+@app.route("/pantryminindex", methods=["POST", "GET"])
+@login_required
+def pantryminindex():
+    beverages = db.execute("SELECT * FROM pantrymin WHERE id=:id AND type=:type", id=session['user_id'], type="beverages")
+    dairy = db.execute("SELECT * FROM pantrymin WHERE id=:id AND type=:type", id=session['user_id'], type="dairy")
+    dairymin = []
+    for i in dairy:
+        rows = db.execute("SELECT * FROM pantrymin WHERE id=:id AND type=:type AND item=:item", id=session['user_id'], type="dairy", item=dairy)
+        for r in rows:
+            if r['quantity'] != NULL:
+                dairymin.append(r['quantity'])
+            else:
+                dairymin.append("0")
+    deli = db.execute("SELECT * FROM pantrymin WHERE id=:id AND type=:type", id=session['user_id'], type="deli")
+    fruits = db.execute("SELECT * FROM pantrymin WHERE id=:id AND type=:type", id=session['user_id'], type="fruits")
+    vegetables = db.execute("SELECT * FROM pantrymin WHERE id=:id AND type=:type", id=session['user_id'], type="vegetables")
+    meat = db.execute("SELECT * FROM pantrymin WHERE id=:id AND type=:type", id=session['user_id'], type="meat")
+    drygoods = db.execute("SELECT * FROM pantrymin WHERE id=:id AND type=:type", id=session['user_id'], type="dry-goods")
+    spices = db.execute("SELECT * FROM pantrymin WHERE id=:id AND type=:type", id=session['user_id'], type="spices")
+    packagedfood = db.execute("SELECT * FROM pantrymin WHERE id=:id AND type=:type", id=session['user_id'], type="packaged-food")
+    return render_template("pantryminindex.html", beverages=beverages, dairy=dairy, deli=deli, fruits=fruits, vegetables=vegetables, meat=meat, drygoods=drygoods, spices=spices, packagedfood = packagedfood)
+
 
 @app.route("/pantryreqmtedit2", methods=["POST", "GET"])
 @login_required
@@ -263,20 +319,25 @@ def pantryreqmtedit2():
         fruitmin = db.execute("SELECT * FROM pantrymin WHERE id=:id AND type=:type", id=userid, type="fruits")
         meatmin = db.execute("SELECT * FROM pantrymin WHERE id=:id AND type=:type", id=userid, type="meat")
         spicemin = db.execute("SELECT * FROM pantrymin WHERE id=:id AND type=:type", id=userid, type="spice")
-        drygoodmin = db.execute("SELECT * FROM pantrymin WHERE id=:id AND type=:type", id=userid, type="dry goods")
-        packagedfoodmin = db.execute("SELECT * FROM pantrymin WHERE id=:id AND type=:type", id=userid, type="packaged food")
-        ## ADD DATA FOR ALL TYPES E.G. FRUITS, VEGGIES, MEATS ETC.
+        drygoodmin = db.execute("SELECT * FROM pantrymin WHERE id=:id AND type=:type", id=userid, type="dry-goods")
+        packagedfoodmin = db.execute("SELECT * FROM pantrymin WHERE id=:id AND type=:type", id=userid, type="packaged-food")
+
         return render_template("pantryreqmtedit2.html", userrows=userrows, beveragemin=beveragemin, dairymin=dairymin, delimin=delimin, vegmin=vegmin, fruitmin=fruitmin, meatmin=meatmin, spicemin=spicemin, drygoodmin=drygoodmin, packagedfoodmin=packagedfoodmin)
 
 @app.route("/findameal", methods=["POST", "GET"])
 @login_required
 def findameal():
+    try:
+        api_key = os.environ.get("API_KEY")
+    except requests.RequestException:
+        return None
+
     if request.method == "GET":
         return render_template("findameal.html")
     else:
         ingredients = db.execute("SELECT * FROM pantry WHERE id=:id", id=session['user_id'])
         ingredlist = []
-        urlnew = "https://api.spoonacular.com/recipes/findByIngredients?apiKey=37f60b0e3dd64d389ab6dacc259cb9f5&ingredients="
+        urlnew = "https://api.spoonacular.com/recipes/findByIngredients?apiKey="+api_key+"&ingredients="
         for i in ingredients:
             ingredlist.append(i['item']+",")
         for i in ingredlist:
@@ -292,32 +353,50 @@ def findameal():
         return render_template("recipes.html", data=data)
 
 @app.route("/restocklist")
+@login_required
 def restocklist():
     ##PANTRY MIN REQUIREMENTS
-    beveragemin = db.execute("SELECT * FROM pantrymin WHERE id=:id AND type=:type", id=userid, type="beverages")
-    dairymin = db.execute("SELECT * FROM pantrymin WHERE id=:id AND type=:type", id=userid, type="dairy")
-    delimin = db.execute("SELECT * FROM pantrymin WHERE id=:id AND type=:type", id=userid, type="deli")
-    vegmin = db.execute("SELECT * FROM pantrymin WHERE id=:id AND type=:type", id=userid, type="vegetables")
-    fruitmin = db.execute("SELECT * FROM pantrymin WHERE id=:id AND type=:type", id=userid, type="fruits")
-    meatmin = db.execute("SELECT * FROM pantrymin WHERE id=:id AND type=:type", id=userid, type="meat")
-    spicemin = db.execute("SELECT * FROM pantrymin WHERE id=:id AND type=:type", id=userid, type="spice")
-    drygoodmin = db.execute("SELECT * FROM pantrymin WHERE id=:id AND type=:type", id=userid, type="dry goods")
-    packagedfoodmin = db.execute("SELECT * FROM pantrymin WHERE id=:id AND type=:type", id=userid, type="packaged food")
-    arrmin = [beveragemin, dairymin, delimin, vegmin, fruitmin, meatmin, spicemin, drygoodmin, packagedfoodmin]
-    ## PANTRY ACTUALS
-    beverages = db.execute("SELECT * FROM pantry WHERE id=:id AND type=:type", id=session['user_id'], type="beverages")
-    dairy = db.execute("SELECT * FROM pantry WHERE id=:id AND type=:type", id=session['user_id'], type="dairy")
-    deli = db.execute("SELECT * FROM pantry WHERE id=:id AND type=:type", id=session['user_id'], type="deli")
-    fruits = db.execute("SELECT * FROM pantry WHERE id=:id AND type=:type", id=session['user_id'], type="fruits")
-    vegetables = db.execute("SELECT * FROM pantry WHERE id=:id AND type=:type", id=session['user_id'], type="vegetables")
-    meat = db.execute("SELECT * FROM pantry WHERE id=:id AND type=:type", id=session['user_id'], type="meat")
-    drygoods = db.execute("SELECT * FROM pantry WHERE id=:id AND type=:type", id=session['user_id'], type="dry goods")
-    spices = db.execute("SELECT * FROM pantry WHERE id=:id AND type=:type", id=session['user_id'], type="spices")
-    packagedfood = db.execute("SELECT * FROM pantry WHERE id=:id AND type=:type", id=session['user_id'], type="packaged food")
-    arrpantry = [beverages, dairy, deli, vegetables, fruits, meat, spices, drygoods, packagedfood]
+    userid = session["user_id"]
+    bevreqmt = dict()
+    rows = db.execute("SELECT * FROM pantrymin WHERE id=:id AND item NOT IN (SELECT item FROM pantry WHERE id=:id)", id=userid)
+    for r in rows:
+        bevreqmt[r['item']] = str(r['quantity']) + " " + r['units']
 
-    for i in range(arrmin):
-        ##if arrpantry[i] =
+    intersection = db.execute("SELECT * FROM pantrymin WHERE id=:id AND item IN (SELECT item FROM pantry WHERE id=:id)", id=userid)
+    for i in intersection:
+        match = db.execute("SELECT * FROM pantry WHERE id=:id AND item=:item", id=userid, item=i['item'])
+        if i['quantity'] > match[0]['quantity']:
+            if i['units'] != match[0]['unit']:
+                bevreqmt[i['item']] = "(Unable to calculate due to different units)"
+            else:
+                bevreqmt[i['item']] = str(i['quantity'] - match[0]['quantity']) + " " + (i['units'])
+
+    return render_template("restocklist.html", bevreqmt=bevreqmt)
+
+@app.route("/sendemail")
+@login_required
+def sendemail():
+    userid = session["user_id"]
+    bevreqmt = dict()
+    rows = db.execute("SELECT * FROM pantrymin WHERE id=:id AND item NOT IN (SELECT item FROM pantry WHERE id=:id)", id=userid)
+    for r in rows:
+        bevreqmt[r['item']] = str(r['quantity']) + " " + r['units']
+
+    intersection = db.execute("SELECT * FROM pantrymin WHERE id=:id AND item IN (SELECT item FROM pantry WHERE id=:id)", id=userid)
+    for i in intersection:
+        match = db.execute("SELECT * FROM pantry WHERE id=:id AND item=:item", id=userid, item=i['item'])
+        if i['quantity'] > match[0]['quantity']:
+            if i['units'] != match[0]['unit']:
+                bevreqmt[i['item']] = "(Unable to calculate due to different units)"
+            else:
+                bevreqmt[i['item']] = str(i['quantity'] - match[0]['quantity']) + " " + (i['units'])
+
+    emailtosend = db.execute("SELECT * FROM users WHERE id=:id", id=userid)
+
+    msg = Message("Restock List",sender=MAIL_USERNAME, recipients=[emailtosend[0]['email']])
+    msg.html = render_template('restocklistemail.html', bevreqmt=bevreqmt)
+    mail.send(msg)
+    return render_template("emailsent.html") # apology("Success!")
 
 @app.route("/logout")
 def logout():
