@@ -31,3 +31,10 @@ DNA: Wrote a program in Python to search for a match between a DNA string and a 
 PSET7\
 Movies: Wrote SQL queries to search from a provided IMDB databsae\
 Houses: Implement a program to import student data into a database, and then produce class rosters\
+
+PSET8\
+Home: In Progress - A webpage simualted for a restaurant
+Finance: A flask based web application to buy and sell stocks using the IEX API.
+Fiftygram: An iOS app that lets you apply filters to photos and save the filtered images\
+Notes: A simple Notes app in iOS using SQLite database\
+Pokedex: An iOS application to view Pokemon using Pokedex API, with added functionality to Catch! Pokemon\
